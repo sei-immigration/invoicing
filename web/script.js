@@ -56,7 +56,7 @@ async function downloadInvoice() {
     requestMode: 'no-cors'
   };
 
-  const response = await fetch("https://faas-sfo3-7872a1dd.doserverless.co/api/v1/web/fn-1b044228-58fb-4834-90f1-10f1250b0ff6/default/invoicing", requestOptions);
+  const response = await fetch("https://seimm-invoicing-app-7x7w3.ondigitalocean.app/web-functions/invoicing/generate-invoice", requestOptions);
   const jsonData = await response.json();
   console.log(jsonData);
 }
