@@ -42,8 +42,6 @@ async function downloadInvoice() {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  raw = '{name}'
-
   requestBody = {
     name: 'Imran'
   }
@@ -51,12 +49,12 @@ async function downloadInvoice() {
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
-    body: raw,
+    body: JSON.stringify(requestBody),
     redirect: 'follow',
     requestMode: 'no-cors'
   };
 
-  const response = await fetch("https://seimm-invoicing-app-7x7w3.ondigitalocean.app/web-functions/invoicing/generate-invoice", requestOptions);
+  const response = await fetch("/web-functions/invoicing/generate-invoice", requestOptions);
   const jsonData = await response.json();
   console.log(jsonData);
 }
