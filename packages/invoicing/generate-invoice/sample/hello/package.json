@@ -1,8 +1,8 @@
 {
-    "name": "hello",
+    "name": "invoicing",
     "version": "1.0.0",
-    "description": "Hello world: NodeJs",
-    "main": "hello.js",
+    "description": "Invoice Generator: NodeJs",
+    "main": "generate-invoice.js",
     "scripts": {
         "test": "jest --coverage --runInBand --forceExit --verbose false"
     },

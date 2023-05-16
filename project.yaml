@@ -1,5 +1,5 @@
 packages:
-  - name: sample
+  - name: invoicing
     actions:
-      - name: hello
+      - name: generate-invoice
         runtime: 'nodejs:default'
