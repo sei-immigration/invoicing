@@ -2,7 +2,7 @@ function main(args) {
     let name = args.name || 'stranger'
     let greeting = 'Hello ' + name + '!'
     console.log(greeting)
-    return { 'name': name }
+    return { body: { 'name': name } }
 }
 
 exports.main = main
