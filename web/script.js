@@ -1,135 +1,62 @@
-//start of get request to retrieve available coffees
+function generateInvoice() {
+  content = document.getElementById('invoice-body').value
+  console.log(content)
 
-const getInventory = async () => {
-  let results = await axios.get('/api/cloud/getCoffee');
-results.data.forEach(item => {
-  let pic = item.pic;
-  let name = item.name;
-  let description = item.description;
-  let price = item.price;
+  eventNameRegex = '.*Event\n\n(.*)\n.*'
+  var eventName = content.match(eventNameRegex)[1]
 
-  let table = document.getElementById("product-table");
-  let newRow = table.insertRow(-1);
-  let picCell = newRow.insertCell();
-  let nameCell = newRow.insertCell();
-  let priceCell = newRow.insertCell();
-  
-  let picLink = document.createElement("img");
-  picLink.src = pic; 
-  picLink.classList.add("product-image");
+  inviteeNameRegex = '.*Invitee Name\n\n(.*)\n.*'
+  var inviteeName = content.match(inviteeNameRegex)[1]
 
-  let nameText = document.createElement("h2");
-  nameText.innerHTML = name;
+  inviteeEmailRegex = '.*Invitee Email\n\n(.*)\n.*'
+  var inviteeEmail = content.match(inviteeEmailRegex)[1]
 
-  let descriptionText = document.createTextNode(description);
-  let priceText = document.createElement("h3");
-  priceText.innerHTML = "$" + price;
+  consultationDateRegex = '.*Date\n\n(.*)\n.*'
+  var consultationDate = content.match(consultationDateRegex)[1]
 
-  let addToCart = document.createElement("button");
-  addToCart.classList.add("addToCart");
-  addToCart.innerHTML = "Add to cart"
-  addToCart.name = name;
-  addToCart.value = price;
+  consultationMeetingLinkRegex = '.*Location\n\n(.*)\n.*'
+  var consultationMeetingLink = content.match(consultationMeetingLinkRegex)[1]
 
-  picCell.appendChild(picLink);
-  nameCell.appendChild(nameText);
-  nameCell.appendChild(descriptionText);
-  nameCell.appendChild(priceText);
-  priceCell.appendChild(addToCart);
+  priceRegex = '.*Price\n\n(.*)\n.*'
+  var price = content.match(priceRegex)[1]
 
-  let cartButtons = document.querySelectorAll(".addToCart");
+  fullNameRegex = '.*Enter full name for terms agreement\n\n(.*)\n.*'
+  var fullName = content.match(fullNameRegex)[1]
 
-  cartButtons.forEach(item => {
-  item.addEventListener('click', cartHandler)
-  })
+  phoneNumberRegex = '.*Phone Number\n\n(.*)\n.*'
+  var phoneNumber = content.match(phoneNumberRegex)[1]
 
-})
+  document.getElementById('booked-event-name').innerHTML = eventName
+  document.getElementById('invitee-name').innerHTML = inviteeName
+  document.getElementById('invitee-email').innerHTML = inviteeEmail
+  document.getElementById('consultation-date').innerHTML = consultationDate
+  document.getElementById('consultation-meeting-link').innerHTML = consultationMeetingLink
+  document.getElementById('price').innerHTML = price
+  document.getElementById('full-name').innerHTML = fullName
+  document.getElementById('phone-number').innerHTML = phoneNumber
+
+  downloadInvoice();
 }
-getInventory();
 
-// start of shopping cart handler
-let order = [];
-const cartHandler = function() {
-  let addItem = {"name" : this.name, "price" : this.value};
-  let currentQuantity = parseInt(document.getElementById("order-quantity").innerHTML);
-  let updatedQuantity = currentQuantity + 1;
-  document.getElementById("order-quantity").innerHTML = updatedQuantity;
-  console.log(updatedQuantity);
-  order.push(addItem);
-  let stringOrder = JSON.stringify(order);
-  localStorage.setItem("order", stringOrder);
+async function downloadInvoice() {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
 
-  let total = Number(localStorage.getItem("total"));
-  if (total) {
-    let itemValue = Number(this.value)
-    let newTotal = itemValue + total;
-    localStorage.setItem("total", newTotal);
-  } else {
-    localStorage.setItem("total", this.value);
+  raw = '{name}'
+
+  requestBody = {
+    name: 'Imran'
   }
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+    requestMode: 'no-cors'
+  };
+
+  const response = await fetch("https://faas-sfo3-7872a1dd.doserverless.co/api/v1/web/fn-1b044228-58fb-4834-90f1-10f1250b0ff6/default/invoicing", requestOptions);
+  const jsonData = await response.json();
+  console.log(jsonData);
 }
-
-// start of email subscription handler
-let subscribeButton = document.getElementById("subscribe");
-const subscribeHandler = async function() {
-  let email = document.getElementById("email").value
-  let emailUrl = "/api/cloud/postEmail" + "?email=" + email;
-  await axios.post(emailUrl);
-  localStorage.setItem("subscribe", email);
-  document.getElementById("email").value = '';
-
-  let emailForm = document.getElementById("email-form");
-  const message = "You have been successfully added to our email list."
-  const successMessage = document.createTextNode(message);
-  emailForm.appendChild(successMessage);
-}
-subscribeButton.addEventListener('click', subscribeHandler);
-
-// start of shopping cart modal handler 
-
-$('#myModal').on('shown.bs.modal', function () {
-  $('#myInput').trigger('focus')
-})
-
-const container = document.getElementById("testModal");
-const modal = new bootstrap.Modal(container);
-
-document.getElementById("btnShow").addEventListener("click", function () {
-  modal.show();
-  $('#modal-table tr:not(:first)').remove();
-  let orderData = JSON.parse(localStorage.getItem("order"));
-  let table = document.getElementById("modal-table");
-
-  orderData.forEach(item => {
-  let name = item.name;
-  let price = item.price;
-
-  let newRow = table.insertRow(-1);
-  let nameCell = newRow.insertCell();
-  let priceCell = newRow.insertCell();
-
-  let nameText = document.createElement("p");
-  nameText.innerHTML = name;
-
-  let priceText = document.createElement("p");
-  priceText.innerHTML = "$" + price;
-
-  nameCell.appendChild(nameText);
-  priceCell.appendChild(priceText);
-  })
-  
-  let grandTotal = localStorage.getItem("total");
-  let newRow = table.insertRow(-1);
-  let totalCell = newRow.insertCell();
-  let grandTotalCell = newRow.insertCell();
-
-  let totalText = document.createElement("h3");
-  console.log(totalText); 
-  totalText.innerHTML = "Grand total: "
-  let grandTotalText = document.createElement("h3");
-  grandTotalText.innerHTML = "$" + grandTotal;
-
-  totalCell.appendChild(totalText);
-  grandTotalCell.appendChild(grandTotalText);
-
-});
