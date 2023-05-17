@@ -3,7 +3,10 @@ function main(args) {
     let name = appointment.fullName || 'stranger'
     let greeting = 'Hello ' + name + '!'
     console.log(greeting)
-    return { body: getBlob() }
+    return {
+        body: getBlob(),
+        headers: { 'Content-Type': 'image/png' }
+    }
 }
 
 async function getBlob() {
