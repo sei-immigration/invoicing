@@ -1,8 +1,9 @@
 function main(args) {
-    let name = args.name || 'stranger'
+    let appointment = args.appointment
+    let name = appointment.fullName || 'stranger'
     let greeting = 'Hello ' + name + '!'
     console.log(greeting)
-    return { body: { 'name': name } }
+    return { body: appointment }
 }
 
 exports.main = main

@@ -35,15 +35,26 @@ function generateInvoice() {
   document.getElementById('full-name').innerHTML = fullName
   document.getElementById('phone-number').innerHTML = phoneNumber
 
-  downloadInvoice();
+  appointment = {
+    'eventName': eventName,
+    'inviteeName': inviteeName,
+    'inviteeEmail': inviteeEmail,
+    'consultationDate': consultationDate,
+    'consultationMeetingLink': consultationMeetingLink,
+    'price': price,
+    'fullName': fullName,
+    'phoneNumber': phoneNumber
+  }
+
+  downloadInvoice(appointment);
 }
 
-async function downloadInvoice() {
+async function downloadInvoice(appointment) {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   requestBody = {
-    name: 'Imran'
+    'appointment': appointment
   }
 
   var requestOptions = {
